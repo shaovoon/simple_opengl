@@ -1,9 +1,9 @@
-# simple_opengl
+# Simple Opengl
 Simple OpenGL Project for Emscripten bug report
 
 ## The bug
 
-The OpenGL 2.0 project is made to reproduce the problem. It works perfectly on VC++ and Windows. To run the exe on windows, copy the SDL2.dll to exe folder.
+The OpenGL 2.0 project showing a rotating quad is made to reproduce the problem. It works perfectly on VC++ and Windows. To run the exe on windows, copy the SDL2.dll to exe folder.
 
 There is a problem with the latest Emscripten calling the render function. The 1st OpenGL call in the render function has this "GLctx is undefined" error in javascript on Chrome and Firefox.
 
