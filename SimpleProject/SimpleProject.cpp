@@ -10,6 +10,11 @@
 #include <cstdio>
 #include <string>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/html5.h>
+//#include <GLES2/gl2.h>
+#endif
+
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -76,6 +81,19 @@ bool init()
 	//Initialization flag
 	bool success = true;
 
+#ifdef __EMSCRIPTEN__
+	emscripten_set_canvas_element_size("#canvas", SCREEN_WIDTH, SCREEN_HEIGHT);
+	EmscriptenWebGLContextAttributes attr;
+	emscripten_webgl_init_context_attributes(&attr);
+	attr.alpha = attr.depth = attr.stencil = attr.antialias = attr.preserveDrawingBuffer = attr.failIfMajorPerformanceCaveat = 0;
+	attr.enableExtensionsByDefault = 1;
+	attr.premultipliedAlpha = 0;
+	attr.majorVersion = 1;
+	attr.minorVersion = 0;
+	EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx = emscripten_webgl_create_context("#canvas", &attr);
+	emscripten_webgl_make_context_current(ctx);
+#else
+
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -119,6 +137,8 @@ bool init()
 					success = false;
 				}
 
+				SDL_GL_MakeCurrent(gWindow, gContext);
+
 				// Set the viewport
 				glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -128,7 +148,7 @@ bool init()
 			}
 		}
 	}
-
+#endif
 	return success;
 }
 
