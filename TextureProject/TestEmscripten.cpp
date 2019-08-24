@@ -57,9 +57,6 @@ bool initGL(UserData* userData);
 
 GLuint LoadShader(GLenum type, const char *shaderSrc);
 
-//Input handler
-void handleKeys(unsigned char key, int x, int y);
-
 //Per frame update
 void update();
 
@@ -84,13 +81,10 @@ void close();
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 
-SDL_Renderer* renderer = NULL;
-
 //OpenGL context
 SDL_GLContext gContext;
 
 //Render flag
-bool gRenderQuad = true;
 UserData gUserData;
 
 GLuint gVboId;
@@ -131,13 +125,6 @@ int main()
 				if (e.type == SDL_QUIT)
 				{
 					quit = true;
-				}
-				//Handle keypress with current mouse position
-				else if (e.type == SDL_TEXTINPUT)
-				{
-					int x = 0, y = 0;
-					SDL_GetMouseState(&x, &y);
-					handleKeys(e.text.text[0], x, y);
 				}
 			}
 
@@ -203,7 +190,7 @@ bool init(UserData *userData)
 	{
 		//Use OpenGL 2.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
 		//Create window
 		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
@@ -253,7 +240,7 @@ bool init(UserData *userData)
 bool initGL(UserData *userData)
 {
 #ifdef __EMSCRIPTEN__
-	emscripten_async_wget("http://localhost:16564/quad2.png", IMG_FILE, load_texture, load_error);
+	emscripten_async_wget("http://localhost:16564/yes.png", IMG_FILE, load_texture, load_error);
 #endif
 
 	const char vShaderStr [] =
@@ -381,15 +368,6 @@ void createVBO(GLfloat *vertexBuffer,
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
 		numIndices * sizeof(GLushort), indices,
 		usage);
-}
-
-void handleKeys(unsigned char key, int x, int y)
-{
-	//Toggle quad
-	if (key == 'q')
-	{
-		gRenderQuad = !gRenderQuad;
-	}
 }
 
 void update()

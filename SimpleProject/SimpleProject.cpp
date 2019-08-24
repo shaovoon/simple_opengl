@@ -50,9 +50,6 @@ bool initGL(UserData* userData);
 
 GLuint LoadShader(GLenum type, const char *shaderSrc);
 
-//Input handler
-void handleKeys(unsigned char key, int x, int y);
-
 //Renders quad to the screen
 void render();
 void updatePosition(glm::mat4x4& mat);
@@ -70,8 +67,6 @@ void close();
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
-
-SDL_Renderer* renderer = NULL;
 
 //OpenGL context
 SDL_GLContext gContext;
@@ -110,8 +105,6 @@ int main()
 		//Event handler
 		SDL_Event e;
 
-		//Enable text input
-		SDL_StartTextInput();
 #ifdef __EMSCRIPTEN__
 		emscripten_set_main_loop(render, 0, 0);
 #else
@@ -126,13 +119,6 @@ int main()
 				{
 					quit = true;
 				}
-				//Handle keypress with current mouse position
-				else if (e.type == SDL_TEXTINPUT)
-				{
-					int x = 0, y = 0;
-					SDL_GetMouseState(&x, &y);
-					handleKeys(e.text.text[0], x, y);
-				}
 			}
 
 			render();
@@ -141,8 +127,6 @@ int main()
 			SDL_GL_SwapWindow(gWindow);
 		}
 #endif
-		//Disable text input
-		SDL_StopTextInput();
 
 	}
 
@@ -195,7 +179,7 @@ bool init(UserData *userData)
 	{
 		//Use OpenGL 2.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
 		//Create window
 		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
@@ -380,15 +364,6 @@ void createVBOArray(GLfloat *vertexBuffer, GLuint numVertices,
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*(sizeof(GLfloat) * numElems),
 		vertexBuffer, usage);
-}
-
-void handleKeys(unsigned char key, int x, int y)
-{
-	//Toggle quad
-	if (key == 'q')
-	{
-		gRenderQuad = !gRenderQuad;
-	}
 }
 
 void render()
