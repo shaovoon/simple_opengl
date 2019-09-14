@@ -345,12 +345,10 @@ bool initGL(UserData *userData)
 
 	// Load the texture
 #ifndef __EMSCRIPTEN__
-	//userData->textureId = init_texture(IMG_FILE);
-	userData->textureId2 = init_texture_from_memory_wrapper(IMG_FILE);
+	userData->textureId = init_texture(IMG_FILE);
 	++gUserData.images_loaded;
 	//userData->textureId2 = init_texture(IMG_FILE2);
-	userData->textureId2 = init_texture_from_memory_wrapper(IMG_FILE2);
-	++gUserData.images_loaded;
+	//++gUserData.images_loaded;
 #endif
 
 	GLfloat vVertices [] = { -0.5f, 0.5f, 0.0f,  // Position 0
